@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Churn Pelanggan Telco</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tambahkan gaya khusus jika diperlukan */
+        .churn-bg { background-color: #fee2e2; } /* Latar merah muda untuk Churn */
+        .no-churn-bg { background-color: #d1fae5; } /* Latar hijau muda untuk Tidak Churn */
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">Prediksi Churn Pelanggan Telco</h1>
+        <p class="text-gray-600 text-center mb-8">Masukkan informasi pelanggan untuk mengetahui apakah pelanggan tersebut berisiko churn.</p>
+
+        {% if error %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="/predict" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="tenure" class="block text-sm font-medium text-gray-700 mb-1">Durasi Langganan (Bulan)</label>
+                    <input type="number" step="0.01" id="tenure" name="tenure" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="monthly_charges" class="block text-sm font-medium text-gray-700 mb-1">Biaya Bulanan ($)</label>
+                    <input type="number" step="0.01" id="monthly_charges" name="monthly_charges" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="total_charges" class="block text-sm font-medium text-gray-700 mb-1">Total Biaya ($)</label>
+                    <input type="number" step="0.01" id="total_charges" name="total_charges" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="contract" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kontrak</label>
+                    <select id="contract" name="contract" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Month-to-month">Month-to-month</option>
+                        <option value="One year">One year</option>
+                        <option value="Two year">Two year</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+                    <select id="payment_method" name="payment_method" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Electronic check">Electronic check</option>
+                        <option value="Mailed check">Mailed check</option>
+                        <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                        <option value="Credit card (automatic)">Credit card (automatic)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tech_support" class="block text-sm font-medium text-gray-700 mb-1">Dukungan Teknis</label>
+                    <select id="tech_support" name="tech_support" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="online_security" class="block text-sm font-medium text-gray-700 mb-1">Keamanan Online</label>
+                    <select id="online_security" name="online_security" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="multiple_lines" class="block text-sm font-medium text-gray-700 mb-1">Multiple Lines</label>
+                    <select id="multiple_lines" name="multiple_lines" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No phone service">No phone service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="device_protection" class="block text-sm font-medium text-gray-700 mb-1">Perlindungan Perangkat</label>
+                    <select id="device_protection" name="device_protection" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="streaming_tv" class="block text-sm font-medium text-gray-700 mb-1">Streaming TV</label>
+                    <select id="streaming_tv" name="streaming_tv" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                    <select id="gender" name="gender" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="senior_citizen" class="block text-sm font-medium text-gray-700 mb-1">Lansia</label>
+                    <select id="senior_citizen" name="senior_citizen" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="0">Tidak</option>
+                        <option value="1">Ya</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="partner" class="block text-sm font-medium text-gray-700 mb-1">Memiliki Pasangan</label>
+                    <select id="partner" name="partner" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Ya</option>
+                        <option value="No">Tidak</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="dependents" class="block text-sm font-medium text-gray-700 mb-1">Memiliki Tanggungan</label>
+                    <select id="dependents" name="dependents" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Ya</option>
+                        <option value="No">Tidak</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="paperless_billing" class="block text-sm font-medium text-gray-700 mb-1">Tagihan Digital</label>
+                    <select id="paperless_billing" name="paperless_billing" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Ya</option>
+                        <option value="No">Tidak</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="internet_service" class="block text-sm font-medium text-gray-700 mb-1">Layanan Internet</label>
+                    <select id="internet_service" name="internet_service" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="DSL">DSL</option>
+                        <option value="Fiber optic">Fiber optic</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="online_backup" class="block text-sm font-medium text-gray-700 mb-1">Backup Online</label>
+                    <select id="online_backup" name="online_backup" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="streaming_movies" class="block text-sm font-medium text-gray-700 mb-1">Streaming Film</label>
+                    <select id="streaming_movies" name="streaming_movies" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="No internet service">No internet service</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                    Prediksi Churn
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

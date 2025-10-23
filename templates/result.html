@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Prediksi Churn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .churn-bg { background-color: #fee2e2; } /* Latar merah muda untuk Churn */
+        .no-churn-bg { background-color: #d1fae5; } /* Latar hijau muda untuk Tidak Churn */
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">Hasil Prediksi Churn</h1>
+
+        <!-- Tampilkan hasil prediksi dengan latar belakang berbeda -->
+        <div class="mb-8 p-6 rounded-lg shadow-md {% if 'Churn' in result %}churn-bg{% else %}no-churn-bg{% endif %}">
+            <h2 class="text-2xl font-semibold text-center mb-2">Status Prediksi:</h2>
+            <p class="text-3xl font-bold text-center mb-4">{{ result }}</p>
+            <div class="flex justify-center space-x-8 mt-4">
+                <div class="text-center">
+                    <p class="text-gray-600">Probabilitas Tidak Churn</p>
+                    <p class="text-2xl font-bold {% if 'Churn' in result %}text-red-600{% else %}text-green-600{% endif %}">{{ prob_no_churn }}%</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-600">Probabilitas Churn</p>
+                    <p class="text-2xl font-bold {% if 'Churn' in result %}text-red-600{% else %}text-green-600{% endif %}">{{ prob_churn }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tampilkan kembali input yang dimasukkan -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+            <h3 class="text-lg font-medium text-gray-800 mb-2">Input yang Dimasukkan:</h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                <li><strong>Durasi Langganan:</strong> {{ input_data.tenure }}</li>
+                <li><strong>Biaya Bulanan:</strong> ${{ input_data.monthly_charges }}</li>
+                <li><strong>Total Biaya:</strong> ${{ input_data.total_charges }}</li>
+                <li><strong>Kontrak:</strong> {{ input_data.contract }}</li>
+                <li><strong>Metode Pembayaran:</strong> {{ input_data.payment_method }}</li>
+                <li><strong>Dukungan Teknis:</strong> {{ input_data.tech_support }}</li>
+                <li><strong>Keamanan Online:</strong> {{ input_data.online_security }}</li>
+                <li><strong>Multiple Lines:</strong> {{ input_data.multiple_lines }}</li>
+                <li><strong>Perlindungan Perangkat:</strong> {{ input_data.device_protection }}</li>
+                <li><strong>Streaming TV:</strong> {{ input_data.streaming_tv }}</li>
+                <li><strong>Jenis Kelamin:</strong> {{ input_data.gender }}</li>
+                <li><strong>Lansia:</strong> {{ input_data.senior_citizen }}</li>
+                <li><strong>Pasangan:</strong> {{ input_data.partner }}</li>
+                <li><strong>Tanggungan:</strong> {{ input_data.dependents }}</li>
+                <li><strong>Tagihan Digital:</strong> {{ input_data.paperless_billing }}</li>
+                <li><strong>Layanan Internet:</strong> {{ input_data.internet_service }}</li>
+                <li><strong>Backup Online:</strong> {{ input_data.online_backup }}</li>
+                <li><strong>Streaming Film:</strong> {{ input_data.streaming_movies }}</li>
+                <!-- Tambahkan item lainnya sesuai input_data -->
+            </ul>
+        </div>
+
+        <div class="text-center">
+            <a href="/" class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                Prediksi Lagi
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[build]
+builder = "nixpacks"
+
+[build.nixpacks]
+phases.setup = [
+  "apt-get update && apt-get install -y build-essential",
+  "pip install --upgrade pip setuptools wheel",
+  "pip install -r requirements.txt"
+]
+
+[start]
+command = "gunicorn app:app" # Perintah untuk menjalankan aplikasi
+
+[env]
+MODEL_PATH = "model_churn_pruned.pkl"
+FEATURES_PATH = "feature_names.txt"
