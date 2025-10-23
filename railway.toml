@@ -9,8 +9,4 @@ phases.setup = [
 ]
 
 [start]
-command = "gunicorn app:app" # Perintah untuk menjalankan aplikasi
-
-[env]
-MODEL_PATH = "model_churn_pruned.pkl"
-FEATURES_PATH = "feature_names.txt"
+command = "gunicorn --bind 0.0.0.0:$PORT app:app" # Pastikan command ini benar dan mencakup binding ke PORT
